@@ -1,7 +1,11 @@
 package com.model2.mvc.web.product;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Map;
 
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -10,15 +14,21 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.Product;
 import com.model2.mvc.service.product.ProductService;
+
+import oracle.jdbc.proxy.annotation.Post;
 
 
 //==> 회원관리 Controller
@@ -52,7 +62,7 @@ public class ProdController {
 	}*/
 	//addProductView.do를 productController 거치지 않고 들어가기 때문에 필요 X
 	
-	@RequestMapping(value="addProduct", method=RequestMethod.GET)
+	@GetMapping(value="addProduct")
 	public String addProduct() throws Exception {
 		// ModelAttribute => 많은 값들이 필요할 때... 사용
 		
@@ -62,19 +72,29 @@ public class ProdController {
 		return "forward:/product/addProductView.jsp";
 	}
 	
-	@RequestMapping(value="addProduct", method=RequestMethod.POST)
-	public String addProduct( @ModelAttribute("product") Product product ,HttpServletRequest request) throws Exception {
-		// ModelAttribute => 많은 값들이 필요할 때... 사용
-
+	@PostMapping(value="addProduct")
+	
+	public String addProduct( @ModelAttribute("product") Product product, @RequestParam(value="file", required = false)MultipartFile file) throws Exception {
+		// ModelAttribute => 많은 값들이 필요할 때... get, set을 encapsulation화 되어있음, product라고 쓴다면... 가져온 값을 product에 값 세팅한다?
+		// binding ==> get, set을 해준다는 의미
+		
+		
+		System.out.println(product);
+		
 		System.out.println("/post/addProduct : POST");
-		//Business Logic
+		
+		file.transferTo(new File("C:\\Users\\Bitcamp\\git\\007doubleO7\\7번리팩토링\\src\\main\\webapp\\images\\uploadFiles\\"+file.getOriginalFilename()));		
+		product.setFileName(file.getOriginalFilename());
+		System.out.println(file);
+		// 애초에 여기서부터 값이 null
+		
 		productService.addProduct(product);
-		request.setAttribute("vo", product);
+		System.out.println("13131"+product);
 		
 		return "forward:/product/addProduct.jsp";
 	}
 	
-	@RequestMapping(value="getProduct", method=RequestMethod.GET )
+	@GetMapping(value="getProduct")
 	public String getProduct( @RequestParam("prodNo") int prodNo , Model model ) throws Exception {
 		// RequestParam => 한 개의 값만 필요할 때... 사용
 		System.out.println("/getProduct.do");

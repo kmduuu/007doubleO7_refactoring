@@ -2,6 +2,8 @@ package com.model2.mvc.service.domain;
 
 import java.sql.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 //==> 상품정보를 모델링(추상화/캡슐화)한 Bean
 public class Product {
 	
@@ -10,10 +12,10 @@ public class Product {
 	private String prodDetail;
 	private String prodName;
 	private String fileName;
-	private Date regDate;
+	private Date regDate;// 등록일자
 	private int price;
 	private String proTranCode;
-	private String manuDate; // 등록일자
+	private String manuDate; 
 	
 	//constructor
 	public Product() {
@@ -21,6 +23,7 @@ public class Product {
 	
 	//method
 	public int getProdNo() {
+		System.out.println(prodNo);
 		return prodNo;
 	}
 
@@ -44,13 +47,6 @@ public class Product {
 		this.prodName = prodName;
 	}
 
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
 
 	public Date getRegDate() {
 		
@@ -72,6 +68,7 @@ public class Product {
 	public String getManuDate() {
 		
 		System.out.println("대체 왜 시발ㄹㄹㄹ");
+		
 		String[] manuArr = manuDate.split("[-]");
 		String resultManuDate="";
 		for(String str : manuArr) {
@@ -93,7 +90,17 @@ public class Product {
 		this.proTranCode = proTranCode;
 	}
 	
+	public String getFileName() {
+		System.out.println(fileName+"여기있소");
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 	
+
 	public String toString() {
 		return "Product : [prodNo] "+prodNo+" [prodName] "+prodName+" [prodDetail] "+prodDetail
 			+" [price] "+price+" [fileName] "+fileName+" [regDate] "+regDate+ "[manuDate]" +manuDate;
